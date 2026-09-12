@@ -46,3 +46,15 @@ Shortlisted
 Hired
         ↓
 Candidate Sees Updated Status
+```
+## Tech Stack
+
+- Python
+- Django 5.2
+- SQLite for local development
+- PostgreSQL support for production
+- Bootstrap
+- HTML / CSS
+- WhiteNoise
+- Gunicorn
+- Git / GitHub
