@@ -1,0 +1,748 @@
+{% extends 'base.html' %}
+
+{% block title %}Browse Jobs{% endblock %}
+
+{% block content %}
+
+<style>
+
+    /* =====================================================
+       CareerFlow Browse Jobs
+       ===================================================== */
+
+    .jobs-hero {
+        padding: 58px 0 42px;
+        background: #f7f8fc;
+        border-bottom: 1px solid #e5e7ee;
+    }
+
+    .jobs-hero .eyebrow {
+        margin-bottom: 8px;
+    }
+
+    .jobs-hero h1 {
+        margin-bottom: 10px;
+    }
+
+    .jobs-section {
+        padding: 42px 0 70px;
+        background: #f8f9fc;
+    }
+
+
+    /* Search panel */
+
+    .jobs-search-card {
+        padding: 22px;
+        background: #ffffff;
+        border: 1px solid #e4e7ee;
+        border-radius: 18px;
+        box-shadow: 0 10px 30px rgba(20, 25, 45, 0.06);
+        margin-bottom: 32px;
+    }
+
+    .jobs-search-card label {
+        display: block;
+        margin-bottom: 7px;
+        color: #667085;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+    }
+
+    .jobs-search-card .form-control,
+    .jobs-search-card .custom-select {
+        height: 48px;
+        border: 1px solid #d9dde7;
+        border-radius: 10px;
+        box-shadow: none;
+    }
+
+    .jobs-search-card .form-control:focus,
+    .jobs-search-card .custom-select:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.10);
+    }
+
+    .jobs-search-button {
+        height: 48px;
+        border-radius: 10px;
+        font-weight: 700;
+    }
+
+
+    /* Results heading */
+
+    .jobs-results-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px;
+    }
+
+    .jobs-results-heading h2 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 800;
+        color: #172033;
+    }
+
+    .jobs-results-count {
+        color: #7a8495;
+        font-size: 13px;
+    }
+
+
+    /* Job cards */
+
+    .job-list-card {
+        height: 100%;
+        padding: 24px;
+        background: #ffffff;
+        border: 1px solid #e4e7ee;
+        border-radius: 18px;
+        box-shadow: 0 8px 25px rgba(20, 25, 45, 0.05);
+        transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .job-list-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(20, 25, 45, 0.10);
+    }
+
+
+    /* Company */
+
+    .job-company-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .job-company-logo {
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        border-radius: 14px;
+        background: #eeedff;
+        color: #4f46e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    .job-company-name {
+        margin-bottom: 4px;
+        color: #70798a;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .job-list-title {
+        margin: 0;
+        font-size: 21px;
+        line-height: 1.25;
+        font-weight: 800;
+        letter-spacing: -.025em;
+    }
+
+    .job-list-title a {
+        color: #172033;
+        text-decoration: none;
+    }
+
+    .job-list-title a:hover {
+        color: #4f46e5;
+    }
+
+
+    /* Location */
+
+    .job-location {
+        margin-top: 3px;
+        color: #7a8495;
+        font-size: 13px;
+    }
+
+
+    /* Skills */
+
+    .job-skills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 20px;
+        min-height: 32px;
+    }
+
+    .job-skill {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        background: #f2f3f7;
+        color: #5f6878;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+
+    /* Information */
+
+    .job-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        margin-top: 22px;
+    }
+
+    .job-info-label {
+        margin-bottom: 4px;
+        color: #737b8c;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+    .job-info-value {
+        color: #172033;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+
+    /* Footer information */
+
+    .job-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-top: 22px;
+        padding-top: 17px;
+        border-top: 1px solid #eceef3;
+    }
+
+    .job-deadline {
+        color: #737b8c;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .job-view-link {
+        flex-shrink: 0;
+        color: #4f46e5;
+        font-size: 13px;
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+    .job-view-link:hover {
+        color: #3730a3;
+        text-decoration: none;
+    }
+
+
+    /* Empty state */
+
+    .jobs-empty-state {
+        padding: 65px 25px;
+        text-align: center;
+        background: #ffffff;
+        border: 1px dashed #cfd5e0;
+        border-radius: 18px;
+    }
+
+    .jobs-empty-icon {
+        width: 62px;
+        height: 62px;
+        margin: 0 auto 18px;
+        border-radius: 16px;
+        background: #eeedff;
+        color: #4f46e5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+        font-weight: 800;
+    }
+
+    .jobs-empty-state h3 {
+        margin-bottom: 8px;
+        font-weight: 800;
+    }
+
+
+    /* Pagination */
+
+    .jobs-pagination {
+        margin-top: 35px;
+    }
+
+
+    /* Mobile */
+
+    @media (max-width: 767px) {
+
+        .jobs-hero {
+            padding: 42px 0 32px;
+        }
+
+        .jobs-section {
+            padding: 30px 0 50px;
+        }
+
+        .jobs-search-card {
+            padding: 18px;
+        }
+
+        .jobs-results-heading {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .job-list-card {
+            padding: 20px;
+        }
+
+        .job-list-title {
+            font-size: 19px;
+        }
+
+        .job-info-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .job-card-footer {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .job-view-link {
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #4f46e5;
+            border-radius: 9px;
+        }
+    }
+
+</style>
+
+
+<!-- =====================================================
+     HERO
+     ===================================================== -->
+
+<section class="jobs-hero">
+
+    <div class="container">
+
+        <div class="eyebrow">
+            Opportunity board
+        </div>
+
+        <h1 class="section-title">
+            Browse open roles
+        </h1>
+
+        <p class="muted mb-0">
+            Discover positions that are currently accepting applications.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SEARCH + RESULTS
+     ===================================================== -->
+
+<section class="jobs-section">
+
+    <div class="container">
+
+
+        <!-- Search -->
+
+        <form
+            method="get"
+            action="{% url 'jobs:search' %}"
+            class="jobs-search-card"
+        >
+
+            <div class="row align-items-end">
+
+                <div class="col-lg-5 form-group mb-3 mb-lg-0">
+
+                    <label for="position">
+                        Role or skill
+                    </label>
+
+                    <input
+                        id="position"
+                        class="form-control"
+                        type="text"
+                        name="position"
+                        value="{{ request.GET.position }}"
+                        placeholder="Django, Python, Designer..."
+                    >
+
+                </div>
+
+
+                <div class="col-lg-3 form-group mb-3 mb-lg-0">
+
+                    <label for="location">
+                        Location
+                    </label>
+
+                    <input
+                        id="location"
+                        class="form-control"
+                        type="text"
+                        name="location"
+                        value="{{ request.GET.location }}"
+                        placeholder="Pune, Mumbai, Remote..."
+                    >
+
+                </div>
+
+
+                <div class="col-lg-2 form-group mb-3 mb-lg-0">
+
+                    <label for="work_mode">
+                        Work mode
+                    </label>
+
+                    <select
+                        id="work_mode"
+                        class="custom-select"
+                        name="work_mode"
+                    >
+
+                        <option value="">
+                            Any
+                        </option>
+
+                        <option
+                            value="onsite"
+                            {% if request.GET.work_mode == 'onsite' %}selected{% endif %}
+                        >
+                            On-site
+                        </option>
+
+                        <option
+                            value="hybrid"
+                            {% if request.GET.work_mode == 'hybrid' %}selected{% endif %}
+                        >
+                            Hybrid
+                        </option>
+
+                        <option
+                            value="remote"
+                            {% if request.GET.work_mode == 'remote' %}selected{% endif %}
+                        >
+                            Remote
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-lg-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary btn-block jobs-search-button"
+                    >
+                        Search
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+
+        <!-- Results heading -->
+
+        <div class="jobs-results-heading">
+
+            <div>
+
+                <div class="eyebrow mb-1">
+                    Open positions
+                </div>
+
+                <h2>
+                    Find your next opportunity
+                </h2>
+
+            </div>
+
+            <div class="jobs-results-count">
+
+                {{ jobs.paginator.count }}
+                role{{ jobs.paginator.count|pluralize }}
+
+            </div>
+
+        </div>
+
+
+        <!-- Job cards -->
+
+        <div class="row">
+
+            {% for job in jobs %}
+
+            <div class="col-lg-6 mb-4">
+
+                <article class="job-list-card">
+
+
+                    <!-- Company -->
+
+                    <div class="job-company-row">
+
+                        <div class="job-company-logo">
+
+                            {{ job.company_name|first|upper }}
+
+                        </div>
+
+
+                        <div>
+
+                            <div class="job-company-name">
+
+                                {{ job.company_name }}
+
+                            </div>
+
+
+                            <h3 class="job-list-title">
+
+                                <a
+                                    href="{% url 'jobs:jobs-detail' job.id %}"
+                                >
+
+                                    {{ job.title }}
+
+                                </a>
+
+                            </h3>
+
+
+                            <div class="job-location">
+
+                                {{ job.location }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Skills -->
+
+                    <div class="job-skills">
+
+                        {% for skill in job.skills_list|slice:':4' %}
+
+                            <span class="job-skill">
+                                {{ skill }}
+                            </span>
+
+                        {% empty %}
+
+                            <span class="job-skill">
+                                Skills not specified
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- Job information -->
+
+                    <div class="job-info-grid">
+
+                        <div>
+
+                            <div class="job-info-label">
+                                Work mode
+                            </div>
+
+                            <div class="job-info-value">
+                                {{ job.get_work_mode_display }}
+                            </div>
+
+                        </div>
+
+
+                        <div>
+
+                            <div class="job-info-label">
+                                Salary
+                            </div>
+
+                            <div class="job-info-value">
+                                {{ job.salary_display }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Footer -->
+
+                    <div class="job-card-footer">
+
+                        <div class="job-deadline">
+
+                            Apply by
+                            <strong>
+                                {{ job.last_date|date:'d M Y' }}
+                            </strong>
+
+                            <br>
+
+                            Posted {{ job.created_at|timesince }} ago
+
+                        </div>
+
+
+                        <a
+                            href="{% url 'jobs:jobs-detail' job.id %}"
+                            class="job-view-link"
+                        >
+                            View role →
+                        </a>
+
+                    </div>
+
+
+                </article>
+
+            </div>
+
+            {% empty %}
+
+            <div class="col-12">
+
+                <div class="jobs-empty-state">
+
+                    <div class="jobs-empty-icon">
+                        J
+                    </div>
+
+                    <div class="eyebrow mb-2">
+                        No matching roles
+                    </div>
+
+                    <h3>
+                        No jobs found
+                    </h3>
+
+                    <p class="muted mb-4">
+                        Try removing a filter or searching for a broader
+                        role, skill, or location.
+                    </p>
+
+                    <a
+                        href="{% url 'jobs:jobs' %}"
+                        class="btn btn-primary"
+                    >
+                        View all jobs
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Pagination -->
+
+        {% if is_paginated %}
+
+        <nav
+            class="jobs-pagination"
+            aria-label="Job pages"
+        >
+
+            <ul class="pagination justify-content-center mb-0">
+
+                {% if page_obj.has_previous %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="?page={{ page_obj.previous_page_number }}"
+                    >
+                        Previous
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+
+                <li class="page-item active">
+
+                    <span class="page-link">
+
+                        {{ page_obj.number }}
+                        /
+                        {{ page_obj.paginator.num_pages }}
+
+                    </span>
+
+                </li>
+
+
+                {% if page_obj.has_next %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="?page={{ page_obj.next_page_number }}"
+                    >
+                        Next
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+            </ul>
+
+        </nav>
+
+        {% endif %}
+
+
+    </div>
+
+</section>
+
+{% endblock %}

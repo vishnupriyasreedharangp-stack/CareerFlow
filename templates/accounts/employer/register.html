@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Create employer account{% endblock %}
+{% block content %}
+<div class="auth-wrap"><div class="container"><div class="auth-card">
+  <div class="eyebrow mb-2">For employers</div><h1>Build your hiring workspace</h1><p class="muted mb-4">Publish roles, review applicants and move candidates through a simple pipeline.</p>
+  <form method="post" novalidate>{% csrf_token %}
+    {% for field in form %}<div class="form-group"><label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}</div>{% endfor %}
+    <button class="btn btn-primary btn-block py-2">Create employer account</button>
+  </form>
+  <p class="text-center muted mt-4 mb-0">Already have an account? <a href="{% url 'accounts:login' %}">Sign in</a>.</p>
+</div></div></div>
+{% endblock %}

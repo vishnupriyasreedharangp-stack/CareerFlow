@@ -1,0 +1,75 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CareerFlow is a Django job marketplace for candidates and employers.">
+    <title>{% block title %}CareerFlow{% endblock %} · CareerFlow</title>
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    {% block styles %}{% endblock %}
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top border-bottom">
+    <div class="container">
+        <a class="navbar-brand brand" href="{% url 'jobs:home' %}"><span>Career</span>Flow</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainNav"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ml-auto align-items-lg-center">
+                <li class="nav-item"><a class="nav-link" href="{% url 'jobs:jobs' %}">Browse jobs</a></li>
+                {% if request.user.is_authenticated and request.user.role == 'employee' %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'jobs:employee-dashboard' %}">My applications</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'jobs:employee-profile' %}">Profile</a></li>
+                {% elif request.user.is_authenticated and request.user.role == 'employer' %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'jobs:employer-dashboard' %}">Employer dashboard</a></li>
+                    <li class="nav-item ml-lg-2"><a class="btn btn-primary btn-sm px-3" href="{% url 'jobs:employer-jobs-create' %}">Post a job</a></li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'accounts:login' %}">Sign in</a></li>
+                    <li class="nav-item ml-lg-2"><a class="btn btn-primary btn-sm px-3" href="{% url 'accounts:employee-register' %}">Create account</a></li>
+                {% endif %}
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item ml-lg-2"><a class="nav-link text-muted" href="{% url 'accounts:logout' %}">Logout</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% if messages %}
+<div class="container pt-3">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show shadow-sm" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<main>{% block content %}{% endblock %}</main>
+
+<footer class="footer mt-5">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="brand brand-footer"><span>Career</span>Flow</div>
+                <p class="text-muted mt-3 mb-0">A focused Django job marketplace built around clean workflows for candidates and hiring teams.</p>
+            </div>
+            <div class="col-lg-6 text-lg-right mt-4 mt-lg-0">
+                <a href="{% url 'jobs:jobs' %}" class="footer-link">Browse jobs</a>
+                <a href="{% url 'accounts:employee-register' %}" class="footer-link">For candidates</a>
+                <a href="{% url 'accounts:employer-register' %}" class="footer-link">For employers</a>
+                <p class="small text-muted mt-4 mb-0">Built with Django · SQLite · Bootstrap</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'vendor/popper.js/umd/popper.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+{% block javascripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,709 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ job.title }} · CareerFlow
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    /* =====================================================
+       CareerFlow Job Detail Page
+       ===================================================== */
+
+    .job-detail-hero {
+        padding: 58px 0 48px;
+        background: linear-gradient(
+            135deg,
+            #f7f8ff 0%,
+            #ffffff 75%
+        );
+        border-bottom: 1px solid #e7eaf0;
+    }
+
+    .job-detail-eyebrow {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+
+    .job-detail-eyebrow span {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 11px;
+        border-radius: 999px;
+        background: #eeedff;
+        color: #4f46e5;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .job-detail-title {
+        max-width: 900px;
+        margin: 0;
+        color: #172033;
+        font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+        line-height: 1.05;
+        font-weight: 850;
+        letter-spacing: -0.055em;
+    }
+
+    .job-detail-company {
+        margin-top: 15px;
+        color: #687386;
+        font-size: 1.05rem;
+        font-weight: 600;
+    }
+
+
+    /* Main */
+
+    .job-detail-section {
+        padding: 48px 0 72px;
+        background: #f8f9fc;
+    }
+
+
+    /* Content cards */
+
+    .job-detail-card {
+        background: #ffffff;
+        border: 1px solid #e5e8ef;
+        border-radius: 18px;
+        box-shadow: 0 8px 28px rgba(25, 31, 56, 0.05);
+    }
+
+    .job-detail-main-card {
+        padding: 30px;
+    }
+
+    .job-detail-sidebar {
+        padding: 26px;
+    }
+
+
+    /* Skills */
+
+    .job-detail-skills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 30px;
+    }
+
+    .job-detail-skill {
+        padding: 7px 11px;
+        border-radius: 999px;
+        background: #eeedff;
+        color: #4f46e5;
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+
+    /* About */
+
+    .job-detail-heading {
+        margin-bottom: 13px;
+        color: #172033;
+        font-size: 1.3rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    .job-detail-description {
+        color: #687386;
+        font-size: 0.96rem;
+        line-height: 1.8;
+    }
+
+
+    /* Job information */
+
+    .job-detail-info-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 30px;
+        padding-top: 24px;
+        border-top: 1px solid #e7eaf0;
+    }
+
+    .job-detail-info-item {
+        padding: 17px;
+        background: #f8f9fc;
+        border-radius: 12px;
+    }
+
+    .job-detail-info-label {
+        margin-bottom: 5px;
+        color: #7a8495;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+    .job-detail-info-value {
+        color: #172033;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+
+    /* Company card */
+
+    .company-detail-logo {
+        width: 58px;
+        height: 58px;
+        margin-bottom: 16px;
+        border-radius: 15px;
+        background: #4f46e5;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+        font-weight: 800;
+    }
+
+    .company-detail-name {
+        margin-bottom: 8px;
+        color: #172033;
+        font-size: 1.2rem;
+        font-weight: 800;
+    }
+
+    .company-detail-description {
+        margin-bottom: 20px;
+        color: #687386;
+        font-size: 0.88rem;
+        line-height: 1.7;
+    }
+
+    .company-detail-label {
+        margin-bottom: 5px;
+        color: #7a8495;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+    .company-detail-value {
+        color: #172033;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+
+    /* Application panel */
+
+    .application-panel {
+        margin-top: 25px;
+        padding-top: 25px;
+        border-top: 1px solid #e7eaf0;
+    }
+
+    .application-panel-title {
+        margin-bottom: 12px;
+        color: #172033;
+        font-size: 15px;
+        font-weight: 800;
+    }
+
+    .application-panel-note {
+        margin-top: 10px;
+        color: #687386;
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .application-panel .btn {
+        min-height: 48px;
+        border-radius: 10px;
+        font-weight: 800;
+    }
+
+
+    /* Closed / submitted messages */
+
+    .job-alert {
+        padding: 13px 15px;
+        border-radius: 11px;
+        font-size: 13px;
+    }
+
+
+    /* Related roles */
+
+    .related-jobs-section {
+        padding: 58px 0 70px;
+        background: #ffffff;
+    }
+
+    .related-job-card {
+        height: 100%;
+        padding: 22px;
+        background: #ffffff;
+        border: 1px solid #e5e8ef;
+        border-radius: 16px;
+        box-shadow: 0 7px 22px rgba(25, 31, 56, 0.045);
+        transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .related-job-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 13px 30px rgba(25, 31, 56, 0.08);
+    }
+
+    .related-job-card h4 {
+        margin-bottom: 8px;
+        font-size: 1.05rem;
+        font-weight: 800;
+    }
+
+    .related-job-card h4 a {
+        color: #172033;
+    }
+
+    .related-job-card h4 a:hover {
+        color: #4f46e5;
+        text-decoration: none;
+    }
+
+    .related-job-meta {
+        color: #687386;
+        font-size: 13px;
+    }
+
+    .related-job-salary {
+        margin-top: 15px;
+        color: #172033;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+
+    /* Mobile */
+
+    @media (max-width: 767px) {
+
+        .job-detail-hero {
+            padding: 42px 0 36px;
+        }
+
+        .job-detail-main-card {
+            padding: 22px;
+        }
+
+        .job-detail-sidebar {
+            padding: 22px;
+        }
+
+        .job-detail-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .job-detail-title {
+            font-size: 2.35rem;
+        }
+
+    }
+
+</style>
+
+
+<!-- =====================================================
+     JOB HERO
+     ===================================================== -->
+
+<section class="job-detail-hero">
+
+    <div class="container">
+
+        <div class="job-detail-eyebrow">
+
+            <span>
+                {{ job.get_type_display }}
+            </span>
+
+            <span>
+                {{ job.get_work_mode_display }}
+            </span>
+
+            {% if job.is_open %}
+                <span>
+                    Accepting applications
+                </span>
+            {% endif %}
+
+        </div>
+
+
+        <h1 class="job-detail-title">
+            {{ job.title }}
+        </h1>
+
+
+        <div class="job-detail-company">
+
+            {{ job.company_name }}
+
+            <span aria-hidden="true"> · </span>
+
+            {{ job.location }}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     JOB CONTENT
+     ===================================================== -->
+
+<section class="job-detail-section">
+
+    <div class="container">
+
+        <div class="row">
+
+
+            <!-- Main content -->
+
+            <div class="col-lg-8 mb-4 mb-lg-0">
+
+                <div class="job-detail-card job-detail-main-card">
+
+
+                    <!-- Skills -->
+
+                    {% if job.skills_list %}
+
+                    <div class="job-detail-skills">
+
+                        {% for skill in job.skills_list %}
+
+                            <span class="job-detail-skill">
+                                {{ skill }}
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <!-- Description -->
+
+                    <h2 class="job-detail-heading">
+                        About the role
+                    </h2>
+
+                    <div class="job-detail-description">
+
+                        {{ job.description|linebreaksbr }}
+
+                    </div>
+
+
+                    <!-- Information -->
+
+                    <div class="job-detail-info-grid">
+
+                        <div class="job-detail-info-item">
+
+                            <div class="job-detail-info-label">
+                                Experience
+                            </div>
+
+                            <div class="job-detail-info-value">
+                                {{ job.experience }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="job-detail-info-item">
+
+                            <div class="job-detail-info-label">
+                                Salary
+                            </div>
+
+                            <div class="job-detail-info-value">
+                                {{ job.salary_display }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="job-detail-info-item">
+
+                            <div class="job-detail-info-label">
+                                Deadline
+                            </div>
+
+                            <div class="job-detail-info-value">
+                                {{ job.last_date|date:'d M Y' }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Sidebar -->
+
+            <div class="col-lg-4">
+
+                <div class="job-detail-card job-detail-sidebar sticky-side">
+
+
+                    <!-- Company -->
+
+                    <div class="company-detail-logo">
+
+                        {{ job.company_name|first|upper }}
+
+                    </div>
+
+
+                    <div class="company-detail-name">
+                        {{ job.company_name }}
+                    </div>
+
+
+                    <div class="company-detail-description">
+
+                        {{ job.company_description }}
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <div class="company-detail-label">
+                            Category
+                        </div>
+
+                        <div class="company-detail-value">
+                            {{ job.category|title }}
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="company-detail-label">
+                            Location
+                        </div>
+
+                        <div class="company-detail-value">
+                            {{ job.location }}
+                        </div>
+
+                    </div>
+
+
+                    {% if job.website %}
+
+                    <div class="mt-3">
+
+                        <a
+                            href="{{ job.website }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="small font-weight-bold"
+                        >
+                            Visit company website →
+                        </a>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <!-- Application -->
+
+                    <div class="application-panel">
+
+                        <div class="application-panel-title">
+
+                            {% if job.is_open %}
+                                Ready to apply?
+                            {% else %}
+                                Applications closed
+                            {% endif %}
+
+                        </div>
+
+
+                        {% if job.is_open %}
+
+                            {% if request.user.is_authenticated and request.user.role == 'employee' %}
+
+                                {% if is_applied %}
+
+                                    <button
+                                        class="btn btn-outline-secondary btn-block"
+                                        disabled
+                                    >
+                                        Application submitted
+                                    </button>
+
+                                    <div class="application-panel-note">
+                                        Your application has been received.
+                                        Track its progress from your candidate dashboard.
+                                    </div>
+
+                                {% else %}
+
+                                    <form
+                                        method="post"
+                                        action="{% url 'jobs:apply-job' job.id %}"
+                                    >
+
+                                        {% csrf_token %}
+
+                                        <button
+                                            type="submit"
+                                            class="btn btn-primary btn-block"
+                                        >
+                                            Apply for this role
+                                        </button>
+
+                                    </form>
+
+                                    <div class="application-panel-note">
+                                        You can track the application status from
+                                        <strong>My applications</strong>.
+                                    </div>
+
+                                {% endif %}
+
+
+                            {% elif not request.user.is_authenticated %}
+
+                                <a
+                                    class="btn btn-primary btn-block"
+                                    href="{% url 'accounts:login' %}?next={% url 'jobs:jobs-detail' job.id %}"
+                                >
+                                    Sign in to apply
+                                </a>
+
+                                <div class="application-panel-note">
+                                    Create a candidate account to apply and track your applications.
+                                </div>
+
+
+                            {% else %}
+
+                                <div class="alert alert-light job-alert mb-0">
+                                    Employer accounts cannot apply to jobs.
+                                </div>
+
+                            {% endif %}
+
+
+                        {% else %}
+
+                            <div class="alert alert-warning job-alert mb-0">
+                                This position is no longer accepting applications.
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     RELATED JOBS
+     ===================================================== -->
+
+{% if related_jobs %}
+
+<section class="related-jobs-section">
+
+    <div class="container">
+
+        <div class="eyebrow mb-2">
+            Keep exploring
+        </div>
+
+        <h2 class="section-title mb-4">
+            More roles in {{ job.category|title }}
+        </h2>
+
+
+        <div class="row">
+
+            {% for item in related_jobs %}
+
+            <div class="col-lg-4 mb-4">
+
+                <article class="related-job-card">
+
+                    <h4>
+
+                        <a
+                            href="{% url 'jobs:jobs-detail' item.id %}"
+                        >
+                            {{ item.title }}
+                        </a>
+
+                    </h4>
+
+
+                    <div class="related-job-meta">
+
+                        {{ item.company_name }}
+
+                        <span aria-hidden="true"> · </span>
+
+                        {{ item.location }}
+
+                    </div>
+
+
+                    <div class="related-job-salary">
+
+                        {{ item.salary_display }}
+
+                    </div>
+
+                </article>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+{% endblock %}

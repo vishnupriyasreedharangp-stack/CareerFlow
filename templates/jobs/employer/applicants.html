@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Applicants · {{ job.title }}
+{% endblock %}
+
+{% block content %}
+
+<section class="detail-hero">
+
+    <div class="container">
+
+        <div class="eyebrow">
+            Applicant pipeline
+        </div>
+
+        <h1 class="section-title">
+            {{ job.title }}
+        </h1>
+
+        <p class="muted mb-0">
+            Review candidates and update their hiring stage.
+        </p>
+
+    </div>
+
+</section>
+
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="table-modern">
+
+            <div class="table-responsive">
+
+                <table class="table mb-0">
+
+                    <thead>
+                        <tr>
+                            <th>Candidate</th>
+                            <th>Email</th>
+                            <th>Applied</th>
+                            <th>Status</th>
+                            <th>Update</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for applicant in applicants %}
+
+                        <tr>
+
+                            <td>
+
+                                <a
+                                    href="{% url 'jobs:employer-applicant-detail' applicant.id %}"
+                                    class="font-weight-bold"
+                                >
+                                    {{ applicant.user.get_full_name|default:applicant.user.email }}
+                                </a>
+
+                                <div class="small muted">
+                                    View candidate profile
+                                </div>
+
+                            </td>
+
+
+                            <td>
+                                {{ applicant.user.email }}
+                            </td>
+
+
+                            <td class="muted">
+                                {{ applicant.created_at|date:'d M Y' }}
+                            </td>
+
+
+                            <td>
+
+                                <span class="status status-{{ applicant.status }}">
+                                    {{ applicant.get_status_display }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <form
+                                    method="post"
+                                    action="{% url 'jobs:application-status' applicant.id %}"
+                                    class="form-inline"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <select
+                                        name="status"
+                                        class="form-control form-control-sm mr-2"
+                                    >
+
+                                        <option
+                                            value="submitted"
+                                            {% if applicant.status == 'submitted' %}selected{% endif %}
+                                        >
+                                            Submitted
+                                        </option>
+
+                                        <option
+                                            value="reviewing"
+                                            {% if applicant.status == 'reviewing' %}selected{% endif %}
+                                        >
+                                            Under review
+                                        </option>
+
+                                        <option
+                                            value="shortlisted"
+                                            {% if applicant.status == 'shortlisted' %}selected{% endif %}
+                                        >
+                                            Shortlisted
+                                        </option>
+
+                                        <option
+                                            value="rejected"
+                                            {% if applicant.status == 'rejected' %}selected{% endif %}
+                                        >
+                                            Rejected
+                                        </option>
+
+                                        <option
+                                            value="hired"
+                                            {% if applicant.status == 'hired' %}selected{% endif %}
+                                        >
+                                            Hired
+                                        </option>
+
+                                    </select>
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-sm btn-primary"
+                                    >
+                                        Save
+                                    </button>
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="5">
+
+                                <div class="empty border-0">
+
+                                    <h4>No applicants yet</h4>
+
+                                    <p class="muted">
+                                        Applications will appear here when candidates apply.
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="{% url 'jobs:employer-dashboard' %}"
+            class="btn btn-link mt-3 pl-0"
+        >
+            ← Back to dashboard
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}

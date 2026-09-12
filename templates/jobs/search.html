@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Search results{% endblock %}
+{% block content %}
+<section class="detail-hero"><div class="container"><div class="eyebrow">Search</div><h1 class="section-title">Find your next role</h1><p class="muted">{{ jobs.paginator.count }} matching opportunity{{ jobs.paginator.count|pluralize }}.</p></div></section>
+<section class="section"><div class="container">
+<form method="get" class="search-card mb-4"><div class="row align-items-end">
+<div class="col-md-4 form-group"><label>Role or skill</label><input class="form-control" name="position" value="{{ request.GET.position }}"></div>
+<div class="col-md-3 form-group"><label>Location</label><input class="form-control" name="location" value="{{ request.GET.location }}"></div>
+<div class="col-md-2 form-group"><label>Work mode</label><select class="custom-select" name="work_mode"><option value="">Any</option><option value="onsite" {% if request.GET.work_mode == 'onsite' %}selected{% endif %}>On-site</option><option value="hybrid" {% if request.GET.work_mode == 'hybrid' %}selected{% endif %}>Hybrid</option><option value="remote" {% if request.GET.work_mode == 'remote' %}selected{% endif %}>Remote</option></select></div>
+<div class="col-md-3"><button class="btn btn-primary btn-block" style="height:46px">Update results</button></div></div></form>
+{% for job in jobs %}<div class="job-card mb-3"><div class="row align-items-center"><div class="col-lg-7"><h4><a href="{% url 'jobs:jobs-detail' job.id %}">{{ job.title }}</a></h4><div class="muted">{{ job.company_name }} · {{ job.location }} · {{ job.get_work_mode_display }}</div></div><div class="col-lg-3 mt-3 mt-lg-0"><strong>{{ job.salary_display }}</strong><div class="small muted">{{ job.get_type_display }}</div></div><div class="col-lg-2 text-lg-right mt-3 mt-lg-0"><a class="btn btn-outline-primary btn-sm" href="{% url 'jobs:jobs-detail' job.id %}">View role</a></div></div></div>{% empty %}<div class="empty"><h4>No jobs found</h4><p class="muted">Try removing a filter or searching for a broader skill.</p></div>{% endfor %}
+{% if is_paginated %}<nav><ul class="pagination justify-content-center mt-4">{% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?position={{ request.GET.position }}&location={{ request.GET.location }}&work_mode={{ request.GET.work_mode }}&page={{ page_obj.previous_page_number }}">Previous</a></li>{% endif %}<li class="page-item active"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>{% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?position={{ request.GET.position }}&location={{ request.GET.location }}&work_mode={{ request.GET.work_mode }}&page={{ page_obj.next_page_number }}">Next</a></li>{% endif %}</ul></nav>{% endif %}
+</div></section>
+{% endblock %}

@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Candidate Review · {{ applicant.user.get_full_name|default:"Candidate" }}
+{% endblock %}
+
+{% block content %}
+
+<section class="detail-hero">
+
+    <div class="container">
+
+        <div class="eyebrow">
+            Candidate review
+        </div>
+
+        <h1 class="section-title mb-1">
+            {{ applicant.user.get_full_name|default:"Candidate" }}
+        </h1>
+
+        <p class="muted mb-0">
+            Application for {{ applicant.job.title }}
+        </p>
+
+    </div>
+
+</section>
+
+
+<section class="section">
+
+    <div class="container">
+
+        <div class="row">
+
+
+            <div class="col-lg-8">
+
+                <div class="auth-card mb-4">
+
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+
+                        <div>
+
+                            <div class="eyebrow">
+                                Candidate information
+                            </div>
+
+                            <h3 class="mb-1">
+                                {{ applicant.user.get_full_name|default:"Candidate" }}
+                            </h3>
+
+                            <p class="muted mb-0">
+                                {{ applicant.user.email }}
+                            </p>
+
+                        </div>
+
+
+                        <span class="status status-{{ applicant.status }}">
+                            {{ applicant.get_status_display }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <small class="text-muted d-block">
+                                Email
+                            </small>
+
+                            <strong>
+                                {{ applicant.user.email }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="col-md-6 mb-3">
+
+                            <small class="text-muted d-block">
+                                Applied on
+                            </small>
+
+                            <strong>
+                                {{ applicant.created_at|date:"d M Y" }}
+                            </strong>
+
+                        </div>
+
+
+                        {% if applicant.user.gender %}
+
+                        <div class="col-md-6 mb-3">
+
+                            <small class="text-muted d-block">
+                                Gender
+                            </small>
+
+                            <strong>
+                                {{ applicant.user.get_gender_display }}
+                            </strong>
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="auth-card">
+
+                    <div class="eyebrow">
+                        Position
+                    </div>
+
+                    <h3>
+                        {{ applicant.job.title }}
+                    </h3>
+
+                    <p class="muted mb-1">
+                        {{ applicant.job.company_name }}
+                    </p>
+
+                    <p class="muted">
+                        {{ applicant.job.location }}
+                        ·
+                        {{ applicant.job.get_work_mode_display }}
+                    </p>
+
+                    <a
+                        href="{% url 'jobs:jobs-detail' applicant.job.id %}"
+                        class="btn btn-outline-primary"
+                    >
+                        View job
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-4">
+
+                <div class="auth-card">
+
+                    <div class="eyebrow">
+                        Hiring decision
+                    </div>
+
+                    <h4 class="mb-3">
+                        Update application
+                    </h4>
+
+
+                    <form
+                        method="post"
+                        action="{% url 'jobs:application-status' applicant.id %}"
+                    >
+
+                        {% csrf_token %}
+
+
+                        <div class="form-group">
+
+                            <label
+                                class="form-label"
+                                for="status"
+                            >
+                                Application status
+                            </label>
+
+
+                            <select
+                                name="status"
+                                id="status"
+                                class="form-control"
+                            >
+
+                                <option
+                                    value="submitted"
+                                    {% if applicant.status == 'submitted' %}selected{% endif %}
+                                >
+                                    Submitted
+                                </option>
+
+                                <option
+                                    value="reviewing"
+                                    {% if applicant.status == 'reviewing' %}selected{% endif %}
+                                >
+                                    Under review
+                                </option>
+
+                                <option
+                                    value="shortlisted"
+                                    {% if applicant.status == 'shortlisted' %}selected{% endif %}
+                                >
+                                    Shortlisted
+                                </option>
+
+                                <option
+                                    value="rejected"
+                                    {% if applicant.status == 'rejected' %}selected{% endif %}
+                                >
+                                    Rejected
+                                </option>
+
+                                <option
+                                    value="hired"
+                                    {% if applicant.status == 'hired' %}selected{% endif %}
+                                >
+                                    Hired
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-block"
+                        >
+                            Update status
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <a
+            href="{% url 'jobs:employer-dashboard-applicants' applicant.job.id %}"
+            class="btn btn-link pl-0 mt-3"
+        >
+            ← Back to applicants
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}

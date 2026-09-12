@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}All applicants{% endblock %}
+{% block content %}
+<section class="detail-hero"><div class="container"><div class="eyebrow">Employer workspace</div><h1 class="section-title">All applicants</h1><p class="muted mb-0">Candidates across every role you have posted.</p></div></section>
+<section class="section"><div class="container"><div class="table-modern"><div class="table-responsive"><table class="table mb-0"><thead><tr><th>Candidate</th><th>Position</th><th>Applied</th><th>Status</th><th></th></tr></thead><tbody>{% for applicant in applicants %}<tr><td><strong>{{ applicant.user.get_full_name|default:applicant.user.email }}</strong><div class="small muted">{{ applicant.user.email }}</div></td><td>{{ applicant.job.title }}</td><td class="muted">{{ applicant.created_at|date:'d M Y' }}</td><td><span class="status status-{{ applicant.status }}">{{ applicant.get_status_display }}</span></td><td class="text-right"><a class="btn btn-sm btn-outline-primary" href="{% url 'jobs:employer-dashboard-applicants' applicant.job.id %}">Review</a></td></tr>{% empty %}<tr><td colspan="5"><div class="empty border-0"><h4>No applications yet</h4></div></td></tr>{% endfor %}</tbody></table></div></div></div></section>
+{% endblock %}
