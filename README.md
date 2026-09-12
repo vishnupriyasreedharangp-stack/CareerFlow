@@ -58,3 +58,21 @@ Candidate Sees Updated Status
 - WhiteNoise
 - Gunicorn
 - Git / GitHub
+
+## Run Locally
+
+### 1. Clone the repository
+
+```bash
+git clone <repository-url>
+cd CareerFlow
+```
+### Windows
+
+py -m venv .venv
+.venv\Scripts\activate
+
+### macOS / Linux:
+
+python3 -m venv .venv
+source .venv/bin/activate
